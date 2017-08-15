@@ -1,0 +1,37 @@
+FORMAT: 1A
+HOST: https://api.mybucks.com/v1/
+
+# MyBucks
+
+The MyBucks public API.
+
+## Users Collection [/users]
+
+### Create a New User [POST]
+
+Register a new user account.
+
++ Parameters:
+
+    + email (string) - A valid email address.
+    + password (string) - A valid password.
+
++ Request (application/json)
+
+        {
+            "email": "andrei@mybucks.com",
+            "password": "..."
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /users/2
+
+    + Body
+
+            {
+                "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
+                "email": "andrei@mybucks.com"
+            }
