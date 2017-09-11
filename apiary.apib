@@ -102,6 +102,34 @@ Use the returned `access_token` by setting the `Authorization: Bearer <access_to
                 "access_token": "51GytE7or2MllEktYlbo7G5mdpgYla1c",
                 "expires_in": 7200
             }
+            
+## Token Refresh [/tokens/:refresh_token]
+
+### Refresh an existing token [POST]
+
+Refresh an existing OAuth2 token.
+
+The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:` 
+and Base64 encoded. 
+
+Use the returned `access_token` by setting the `Authorization: Bearer <access_token>` header for consecutive calls.
+
++ Request
+
+        {
+            "context": "mybucks.getbucks.za"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "refresh_token": "A7nfkMM5CRuVUdrssIzTF3gTT47bFk4Y",
+                "token_type": "bearer",
+                "access_token": "51GytE7or2MllEktYlbo7G5mdpgYla1c",
+                "expires_in": 7200
+            }
 
 ## Current User [/user]
 
@@ -124,7 +152,7 @@ Fetch the currently authenticated user.
                 "context": "mybucks.getbucks.za"
             }
             
-## Current Customer [/customer]
+## Current Customer [/customer{?fields}]
 
 ### Fetch the Current Customer [GET]
 
@@ -133,6 +161,10 @@ Fetch the customer details for the currently authenticated user.
 + Headers:
 
     + Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
+    
++ Parameters
+
+    + fields (string) - A comma-delimited list of field ids
 
 + Response 200 (application/json)
 
