@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.mybucks.com/v1/
+HOST: https://test.mybucksbank.com/
 
 # MyBucks
 
@@ -9,29 +9,175 @@ The MyBucks public API.
 
 ### Create a New User [POST]
 
-Register a new user account.
+Register a new user account. The `Authorization` header should contain the OAuth 
+`client_id` and `client_secret` joined by `:` and Base64 encoded.
 
++ Headers:
+
+    + Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
+    
 + Parameters:
 
     + email (string) - A valid email address.
+    + mobile_number (string) - A valid mobile number.
     + password (string) - A valid password.
+    + context (string) - A valid context (`<group>.<company>.<country>`).
 
-+ Request (application/json)
++ Request Register with email address (application/json)
 
         {
             "email": "andrei@mybucks.com",
-            "password": "..."
+            "password": "...",
+            "context": "mybucks.getbucks.za"
+        }
+        
++ Request Register with mobile number (application/json)
+
+        {
+            "mobile_number": "27821234567",
+            "password": "...",
+            "context": "mybucks.getbucks.za"
         }
 
 + Response 201 (application/json)
 
     + Headers
 
-            Location: /users/2
+            Location: /users/1
 
     + Body
 
             {
                 "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
                 "email": "andrei@mybucks.com"
+                "mobile_number": "27821234567",
+                "context": "mybucks.getbucks.za"
+            }
+            
+## Tokens Collection [/tokens]
+
+### Create a New Token [POST]
+
+Create a new OAuth2 token.
+
+The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:` 
+and Base64 encoded. 
+
+Use the returned `access_token` by setting the `Authorization: Bearer <access_token>` header for consecutive calls.
+
++ Headers:
+
+    + Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
+    
++ Parameters:
+
+    + email (string) - A valid email address.
+    + mobile_number (string) - A valid mobile number.
+    + password (string) - A valid password.
+    + context (string) - A valid context (`<group>.<company>.<country>`).
+
++ Request Authenticate with email address (application/json)
+
+        {
+            "email": "andrei@mybucks.com",
+            "password": "...",
+            "context": "mybucks.getbucks.za"
+        }
+        
++ Request Authenticate with mobile number (application/json)
+
+        {
+            "mobile_number": "27821234567",
+            "password": "...",
+            "context": "mybucks.getbucks.za"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "refresh_token": "A7nfkMM5CRuVUdrssIzTF3gTT47bFk4Y",
+                "token_type": "bearer",
+                "access_token": "51GytE7or2MllEktYlbo7G5mdpgYla1c",
+                "expires_in": 7200
+            }
+
+## Current User [/user]
+
+### Fetch the Current User [GET]
+
+Fetch the currently authenticated user.
+
++ Headers:
+
+    + Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
+                "email": "andrei@mybucks.com"
+                "mobile_number": "27821234567",
+                "context": "mybucks.getbucks.za"
+            }
+            
+## Current Customer [/customer]
+
+### Fetch the Current Customer [GET]
+
+Fetch the customer details for the currently authenticated user.
+
++ Headers:
+
+    + Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "cb6a0fb9-7c96-4082-8d19-f80921d0cddb",
+                "first_name": "Andrei"
+                "last_name": "Todorov",
+                "id_number": "8012216798760",
+                "date_of_birth": "1980-12-21"
+            }
+
+### Update the Current Customer [PUT]
+
+Update the customer details for the currently authenticated user.
+
++ Headers:
+
+    + Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
+    
++ Parameters:
+
+    + first_name (string) - The first name.
+    + last_name (string) - The last name.
+    + id_number (string) - A valid ID number in the current context.
+    + date_of_birth (string) - A valid ISO 8601 date (https://en.wikipedia.org/wiki/ISO_8601).
+
++ Request (application/json)
+
+        {
+            "first_name": "Andrei"
+            "last_name": "Todorov",
+            "id_number": "8012216798760",
+            "date_of_birth": "1980-12-21"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "cb6a0fb9-7c96-4082-8d19-f80921d0cddb",
+                "first_name": "Andrei"
+                "last_name": "Todorov",
+                "id_number": "8012216798760",
+                "date_of_birth": "1980-12-21"
             }
