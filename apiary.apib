@@ -8,109 +8,106 @@ The MyBucks public API.
 ## Users Collection [/users]
 
 ### Create a New User [POST]
+Register a new user account. The `Authorization` header should contain the OAuth2
+`client_id` and `client_secret` joined by `:` and *Base64* encoded.
 
-Register a new user account. The `Authorization` header should contain the OAuth 
-`client_id` and `client_secret` joined by `:` and Base64 encoded.
-
-+ Request Register with email address (application/json)
-
-    + Headers
-
-            Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
-
-    + Attributes
-
-        + email (string) - A valid email address.
-        + password (string) - A valid password.
-        + context (string) - A valid context (`<group>.<company>.<country>`).
-
-    + Body
-
-            {
-                "email": "andrei@mybucks.com",
-                "password": "...",
-                "context": "mybucks.getbucks.za"
-            }
-        
-+ Request Register with mobile number (application/json)
++ Request Register with Email Address (application/json)
 
     + Headers
 
             Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
 
     + Attributes
-    
+        + context (string, required) - A valid context (`<group>.<company>.<country>`).
+        + email (string, required) - A valid email address.
         + mobile_number (string) - A valid mobile number.
-        + password (string) - A valid password.
-        + context (string) - A valid context (`<group>.<company>.<country>`).
+        + password (string, required) - A valid password.
 
     + Body
 
             {
+                "context": "mybucks.getbucks.za",
+                "email": "andrei@mybucks.com",
+                "password": "..."
+            }
+
++ Request Register with Mobile Number (application/json)
+
+    + Headers
+
+            Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
+
+    + Attributes
+        + context (string, required) - A valid context (`<group>.<company>.<country>`).
+        + email (string) - A valid email address.
+        + mobile_number (string, required) - A valid mobile number.
+        + password (string, required) - A valid password.
+
+    + Body
+
+            {
+                "context": "mybucks.getbucks.za",
                 "mobile_number": "27821234567",
-                "password": "...",
-                "context": "mybucks.getbucks.za"
+                "password": "..."
             }
 
 + Response 201 (application/json)
 
         {
             "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
-            "email": "andrei@mybucks.com"
-            "mobile_number": "27821234567",
-            "context": "mybucks.getbucks.za"
+            "context": "mybucks.getbucks.za",
+            "email": "andrei@mybucks.com",
+            "mobile_number": "27821234567"
         }
 
 ## Tokens Collection [/tokens]
 
 ### Create a New Token [POST]
-
 Create a new OAuth2 token.
 
-The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:` 
-and Base64 encoded. 
+The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:`
+and *Base64* encoded.
 
 Use the returned `access_token` by setting the `Authorization: Bearer <access_token>` header for consecutive calls.
 
-+ Request Authenticate with email address (application/json)
++ Request Authenticate with Email Address (application/json)
 
     + Headers
 
             Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
 
     + Attributes
-    
-        + email (string) - A valid email address.
+        + context (string, required) - A valid context (`<group>.<company>.<country>`).
+        + email (string, required) - A valid email address.
         + mobile_number (string) - A valid mobile number.
-        + password (string) - A valid password.
-        + context (string) - A valid context (`<group>.<company>.<country>`).
+        + password (string, required) - A valid password.
 
     + Body
 
             {
+                "context": "mybucks.getbucks.za",
                 "email": "andrei@mybucks.com",
-                "password": "...",
-                "context": "mybucks.getbucks.za"
+                "password": "..."
             }
-        
-+ Request Authenticate with mobile number (application/json)
+
++ Request Authenticate with Mobile Number (application/json)
 
     + Headers
 
             Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
 
     + Attributes
-    
-        + mobile_number (string) - A valid mobile number.
-        + password (string) - A valid password.
-        + context (string) - A valid context (`<group>.<company>.<country>`).
+        + context (string, required) - A valid context (`<group>.<company>.<country>`).
+        + email (string) - A valid email address.
+        + mobile_number (string, required) - A valid mobile number.
+        + password (string, required) - A valid password.
 
     + Body
 
             {
+                "context": "mybucks.getbucks.za",
                 "mobile_number": "27821234567",
-                "password": "...",
-                "context": "mybucks.getbucks.za"
+                "password": "..."
             }
 
 + Response 200 (application/json)
@@ -121,27 +118,24 @@ Use the returned `access_token` by setting the `Authorization: Bearer <access_to
             "access_token": "51GytE7or2MllEktYlbo7G5mdpgYla1c",
             "expires_in": 7200
         }
-   
+
 ## Token Refresh [/tokens/{refresh_token}]
 
-### Refresh an existing token [POST]
-
+### Refresh an Existing Token [POST]
 Refresh an existing OAuth2 token.
 
-The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:` 
-and Base64 encoded. 
+The `Authorization` header should contain the OAuth2 `client_id` and `client_secret` joined by `:`
+and *Base64* encoded.
 
 Use the returned `access_token` by setting the `Authorization: Bearer <access_token>` header for consecutive calls.
 
 + Parameters
-
     + refresh_token (string) - The refresh token.
 
 + Request (application/json)
 
     + Attributes
-    
-        + context (string) - A valid context (`<group>.<company>.<country>`).
+        + context (string, required) - A valid context (`<group>.<company>.<country>`).
 
     + Body
 
@@ -159,51 +153,45 @@ Use the returned `access_token` by setting the `Authorization: Bearer <access_to
         }
 
 ## Current User [/user]
-
 A meta-resource which simplifies working with the currently authenticated user.
 
 ### Fetch the Current User [GET]
-
 Fetch the currently authenticated user.
 
 + Request
 
     + Headers
-    
+
             Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
 
 + Response 200 (application/json)
 
-        {
-            "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
-            "email": "andrei@mybucks.com"
-            "mobile_number": "27821234567",
-            "context": "mybucks.getbucks.za"
-        }
+            {
+                "id": "4ff0e5b2-835d-46c3-983c-4cf2308bd97e",
+                "context": "mybucks.getbucks.za",
+                "email": "andrei@mybucks.com",
+                "mobile_number": "27821234567"
+            }
 
-## Current Customer [/customer{?fields}]
-
+## Current Customer [/customer]
 A meta-resource which simplifies working with the customer for the currently authenticated user.
 
-### Fetch the Current Customer [GET]
-
+### Fetch the Current Customer [GET /customer{?fields}]
 Fetch the customer details for the currently authenticated user.
 
 + Parameters
-
     + fields (string) - A comma-delimited list of field ids.
 
 + Request
 
     + Headers
-    
+
             Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
 
 + Response 200 (application/json)
 
-
         {
-            "first_name": "Andrei"
+            "first_name": "Andrei",
             "last_name": "Todorov",
             "id_number": "8012216798760",
             "date_of_birth": "1980-12-21",
@@ -211,33 +199,31 @@ Fetch the customer details for the currently authenticated user.
         }
 
 ### Update the Current Customer [PUT]
-
 Update the customer details for the currently authenticated user.
 
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Bearer 51GytE7or2MllEktYlbo7G5mdpgYla1c
 
     + Attributes
-    
         + first_name (string) - The first name.
         + last_name (string) - The last name.
         + id_number (string) - A valid ID number in the current context.
         + date_of_birth (string) - A valid ISO 8601 date (https://en.wikipedia.org/wiki/ISO_8601).
         + email_address (string) - A valid email address.
         + mobile_number (string) - A valid mobile number.
-        + physical_address_street - The street address, including street number.
-        + physical_address_city - The city name.
-        + physical_address_town - The town name.
-        + physical_address_province - The province name.
-        + physical_address_state - The state name.
-        + physical_address_postal_code - The postal code.
-        + physical_address_country - The ISO 3166-1 aplha-2 code (https://en.wikipedia.org/wiki/ISO_3166-1).
+        + physical_address_street (string) - The street address, including street number.
+        + physical_address_city (string) - The city name.
+        + physical_address_town (string) - The town name.
+        + physical_address_province (string) - The province name.
+        + physical_address_state (string) - The state name.
+        + physical_address_postal_code (string) - The postal code.
+        + physical_address_country (string) - The ISO 3166-1 aplha-2 code (https://en.wikipedia.org/wiki/ISO_3166-1).
 
     + Body
-    
+
             {
                 "first_name": "Andrei",
                 "last_name": "Todorov",
@@ -255,3 +241,29 @@ Update the customer details for the currently authenticated user.
             "date_of_birth": "1980-12-21",
             "...": "..."
         }
+
+## Password Reset Tokens [/password-reset-tokens]
+
+### Create a Password Reset Token [POST]
+Create a new password reset token and email the password reset URL.
+
+If the email is not available the password reset URL will be sent via SMS.
+
+The `Authorization` header should contain the OAuth2 `client_id` and
+`client_secret` joined by `:` and *Base64* encoded.
+
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Basic bXlidWNrc19hcHA6REFMQnJJYmxlVkVP
+    
+    + Attributes
+        + context: `mybucks.getbucks.za` (string, required) - A valid context (`<group>.<company>.<country>`).
+        + email: `andrei@teamgeek.co.za` (string) - A valid email for the given context.
+        + mobile_number: `27821234567` (string) - A valid mobile number for the given context.
+        
++ Response 200 (application/json)
+
+    + Attributes
+        + url: `https://www.mybucksbank.com/password-reset?t=51GytE7or2MllEktYlbo7G5mdpgYla1c` (string) - The password reset URL.
